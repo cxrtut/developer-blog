@@ -14,14 +14,14 @@ export async function POST(req) {
   }
 
   // Get the headers
-  const headerPayload = headers();
+  const headerPayload = await headers();
   const svix_id = headerPayload.get('svix-id');
   const svix_timestamp = headerPayload.get('svix-timestamp');
   const svix_signature = headerPayload.get('svix-signature');
 
   // If there are no headers, error out
   if (!svix_id || !svix_timestamp || !svix_signature) {
-    return new Response('Error occured -- no svix headers', {
+    return new Response('Error occurred -- no svix headers', {
       status: 400,
     });
   }
@@ -44,7 +44,7 @@ export async function POST(req) {
     });
   } catch (err) {
     console.error('Error verifying webhook:', err);
-    return new Response('Error occured', {
+    return new Response('Error occurred', {
       status: 400,
     });
   }
@@ -53,7 +53,7 @@ export async function POST(req) {
   // For this guide, you simply log the payload to the console
   const { id } = evt?.data;
   const eventType = evt?.type;
-  console.log(`Webhook with and ID of ${id} and type of ${eventType}`);
+  console.log(`Webhook with ID of ${id} and type of ${eventType}`);
   console.log('Webhook body:', body);
 
   if (eventType === 'user.created' || eventType === 'user.updated') {
@@ -82,7 +82,7 @@ export async function POST(req) {
       }
     } catch (error) {
       console.log('Error creating or updating user:', error);
-      return new Response('Error occured', {
+      return new Response('Error occurred', {
         status: 400,
       });
     }
@@ -94,7 +94,7 @@ export async function POST(req) {
       await deleteUser(id);
     } catch (error) {
       console.log('Error deleting user:', error);
-      return new Response('Error occured', {
+      return new Response('Error occurred', {
         status: 400,
       });
     }
